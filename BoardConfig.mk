@@ -46,16 +46,30 @@ TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
 TARGET_CPU_MEMCPY_BASE_OPT_DISABLE := true
 TARGET_CPU_SMP := true
-TARGET_CPU_VARIANT := krait
+TARGET_CPU_VARIANT := cortex-a7
 
 TARGET_BOOTLOADER_BOARD_NAME := w7
+
+
+#My compilation flags [experimental]
+TARGET_GLOBAL_CFLAGS += -march=armv7-a -mtune=cortex-a7 -mfpu=neon -mfloat-abi=softfp
+TARGET_GLOBAL_CPPFLAGS += -march=armv7-a -mtune=cortex-a7 -mfpu=neon -mfloat-abi=softfp
+TARGET_USE_O3 := true
+SUPPRES_UNUSED_WARNING := true
+
+# My Architecture additions [experimental]
+OPT_MEMORY := true
+TARGET_CPU_SMP := true
+ARCH_ARM_HAVE_NEON := true
+STRICT_ALIASING := true
+
 
 # Kernel image
 BOARD_KERNEL_SEPARATED_DT := true
 BOARD_CUSTOM_BOOTIMG_MK := device/lge/w7/mkbootimg.mk
 TARGET_KERNEL_SOURCE := kernel/lge/msm8226
 TARGET_KERNEL_CONFIG := w7ds_cyanogenmod_defconfig
-BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 user_debug=31 msm_rtb.filter=0x37 androidboot.hardware=w7 androidboot.selinux=enforcing
+BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 user_debug=31 msm_rtb.filter=0x37 androidboot.hardware=w7 androidboot.selinux=permissive
 BOARD_KERNEL_BASE := 0x00000000
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x01000000 --tags_offset 0x00000100

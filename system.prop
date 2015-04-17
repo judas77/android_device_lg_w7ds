@@ -1,6 +1,7 @@
 #
 # system.prop for w7
 #
+
 # Use reference RIL for initial bringup
 ro.vendor.extension_library=/vendor/lib/libqti-perfd-client.so
 rild.libpath=/vendor/lib/libril-qc-qmi-1.so
@@ -64,3 +65,11 @@ ro.config.vc_call_vol_steps=6
 persist.data.sbp.update=0
 persist.radio.rat_on=legacy
 ro.lge.proximity.delay=25
+
+# Hardware info
+ro.device.chipset=Qualcomm Snapdragon 400 MSM8226 (28 nm)
+ro.device.cpu=ARMv7 1200MHz Quad-core ARM Cortex-A7 MPcore
+ro.device.gpu=Qualcomm Adreno 305 (450 - MHz)
+ro.device.rear_cam=8 Mpix (3464 x 2312)
+ro.device.front_cam=VGA (640x480)
+ro.device.screen_res=4,7' 960x540 pixels ( ~234 ppi)

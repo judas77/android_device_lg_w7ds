@@ -297,7 +297,9 @@ PRODUCT_PROPERTY_OVERRIDES += \
     audio.offload.gapless.enabled=false \
     audio.offload.multiple.enabled=false \
     audio.offload.pcm.16bit.enable=true \
-    audio.offload.pcm.24bit.enable=true
+    audio.offload.pcm.24bit.enable=true \
+    lpa.decode=false \
+    use.dedicated.device.for.voip=false 
 
 PRODUCT_PROPERTY_OVERRIDES += \
     av.offload.enable=false \
