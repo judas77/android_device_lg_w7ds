@@ -146,9 +146,6 @@
                   autodetected from the Configuration. -->
     <bool name="config_showNavigationBar">false</bool>
 
-    <!-- Minimum screen brightness allowed by the power manager. -->
-    <integer name="config_screenBrightnessDim">5</integer>
-
     <integer-array name="config_longPressVibePattern">
         <item>0</item>
         <item>40</item>
@@ -301,11 +298,10 @@
 
 
     <!-- MMS user agent string -->
-    <string name="config_mms_user_agent" translatable="false">Nexus5</string>
+    <string name="config_mms_user_agent" translatable="false">Nexus4</string>
 
-    <!-- MMS user agent prolfile url -->
-    <string name="config_mms_user_agent_profile_url" translatable="false">http://gsm.lge.com/html/gsm/Nexus5-M3.xml</string>
-
+   <!-- MMS user agent prolfile url -->
+    <string name="config_mms_user_agent_profile_url" translatable="false">http://gsm.lge.com/html/gsm/20130914.xml</string>
 
     <!-- Screen brightness when dozing -->
     <integer name="config_screenBrightnessDoze">17</integer>
@@ -319,6 +315,24 @@
     <!-- Wether doze feature is enabled by default in settings. -->
     <bool name="config_doze_enabled_by_default">false</bool>
     <bool name="config_dozeAfterScreenOff">true</bool>
+
+    <!-- Minimum screen brightness setting allowed by the power manager.
+         The user is forbidden from setting the brightness below this level. -->
+    <integer name="config_screenBrightnessSettingMinimum">1</integer>
+
+    <!-- Minimum screen brightness allowed by the power manager. -->
+    <integer name="config_screenBrightnessDim">1</integer>
+
+    <!-- Default screen brightness setting.
+         Must be in the range specified by minimum and maximum. -->
+    <integer name="config_screenBrightnessSettingDefault">80</integer>
+
+   <!-- Indicate whether to allow the device to suspend when the screen is off
+         due to the proximity sensor.  This resource should only be set to true
+         if the sensor HAL correctly handles the proximity sensor as a wake-up source.
+         Otherwise, the device may fail to wake out of suspend reliably.
+         The default is false. -->
+    <bool name="config_suspendWhenScreenOffDueToProximity">true</bool>
 
 
 </resources>
