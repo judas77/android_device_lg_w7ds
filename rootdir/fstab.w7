@@ -19,4 +19,4 @@
 /dev/block/platform/msm_sdcc.1/by-name/boot         	/boot           	emmc    defaults                                                        		defaults
 /dev/block/platform/msm_sdcc.1/by-name/recovery     	/recovery       	emmc    defaults                                                        		defaults
 /dev/block/platform/msm_sdcc.1/by-name/misc         	/misc           	emmc    defaults                             	                           		defaults
-/dev/block/zram0         				/none  		        swap    defaults                            	                                        zramsize=268435456
+/dev/block/zram0         				/none  		        swap    defaults	zramsize=419430400
