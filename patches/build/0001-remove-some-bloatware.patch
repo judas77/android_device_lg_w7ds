@@ -1,0 +1,91 @@
+From 2bc95971974821f78f8e5e5cd80fb0779c223c11 Mon Sep 17 00:00:00 2001
+From: Kain Highwind <highwind.1977@gmail.com>
+Date: Tue, 21 Jul 2015 15:01:49 +0200
+Subject: [PATCH] remove some bloatware
+
+Change-Id: I28874abd47e1901eedc8d1f479df41c4f64c5b81
+---
+ target/product/core.mk                 |  5 -----
+ target/product/emulator.mk             | 12 ------------
+ target/product/generic_no_telephony.mk |  4 ----
+ 3 files changed, 21 deletions(-)
+
+diff --git a/target/product/core.mk b/target/product/core.mk
+index a871780..7ba14fb 100644
+--- a/target/product/core.mk
++++ b/target/product/core.mk
+@@ -21,10 +21,8 @@
+ # core_tiny.mk in addition to core_minimal.mk.
+ 
+ PRODUCT_PACKAGES += \
+-    BasicDreams \
+     Browser \
+     Calculator \
+-    Calendar \
+     CalendarProvider \
+     CaptivePortalLogin \
+     CertInstaller \
+@@ -32,8 +30,6 @@ PRODUCT_PACKAGES += \
+     DeskClock \
+     DocumentsUI \
+     DownloadProviderUi \
+-    Email \
+-    Exchange2 \
+     ExternalStorageProvider \
+     FusedLocation \
+     InputDevices \
+@@ -46,7 +42,6 @@ PRODUCT_PACKAGES += \
+     libpac \
+     PrintSpooler \
+     ProxyHandler \
+-    QuickSearchBox \
+     Settings \
+     SharedStorageBackup \
+     Telecom \
+diff --git a/target/product/emulator.mk b/target/product/emulator.mk
+index 62099df..af5225f 100644
+--- a/target/product/emulator.mk
++++ b/target/product/emulator.mk
+@@ -25,7 +25,6 @@ PRODUCT_PACKAGES += \
+ # Device modules
+ PRODUCT_PACKAGES += \
+     egl.cfg \
+-    gralloc.goldfish \
+     libGLESv1_CM_emulation \
+     lib_renderControl_enc \
+     libEGL_emulation \
+@@ -36,16 +35,5 @@ PRODUCT_PACKAGES += \
+     libGLESv1_enc \
+     qemu-props \
+     qemud \
+-    camera.goldfish \
+-    camera.goldfish.jpeg \
+-    lights.goldfish \
+-    gps.goldfish \
+-    sensors.goldfish \
+     e2fsck
+ 
+-
+-PRODUCT_COPY_FILES += \
+-    device/generic/goldfish/fstab.goldfish:root/fstab.goldfish \
+-    device/generic/goldfish/init.goldfish.rc:root/init.goldfish.rc \
+-    device/generic/goldfish/init.goldfish.sh:system/etc/init.goldfish.sh \
+-    device/generic/goldfish/ueventd.goldfish.rc:root/ueventd.goldfish.rc
+diff --git a/target/product/generic_no_telephony.mk b/target/product/generic_no_telephony.mk
+index a938a5f..68265d3 100644
+--- a/target/product/generic_no_telephony.mk
++++ b/target/product/generic_no_telephony.mk
+@@ -19,10 +19,6 @@
+ 
+ PRODUCT_PACKAGES := \
+     Bluetooth \
+-    Camera2 \
+-    Gallery2 \
+-    Music \
+-    MusicFX \
+     OneTimeInitializer \
+     Provision \
+     SystemUI \
+-- 
+1.9.1
+

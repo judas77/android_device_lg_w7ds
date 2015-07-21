@@ -174,10 +174,6 @@ on boot
     # an ack packet comes out of order
     write /proc/sys/net/netfilter/nf_conntrack_tcp_be_liberal 1
 
-    # setup permissions for IrRC  UART
-    chown system system /dev/ttyHSL1
-    chmod 660 /dev/ttyHSL1
-
     # NFC local data and nfcee xml storage
     mkdir /data/nfc 0770 nfc nfc
     mkdir /data/nfc/param 0770 nfc nfc
@@ -199,6 +195,7 @@ on fs
     # activate zram
     swapon_all fstab.w7
     write /proc/sys/vm/page-cluster 0
+    write /proc/sys/vm/swappiness 100
 
     # Keeping following partitions outside fstab file. As user may not have
     # these partition flashed on the device. Failure to mount any partition in fstab file
@@ -554,17 +551,10 @@ on property:sys.boot_completed=1
     write /sys/devices/system/cpu/cpu1/online 1
     write /sys/devices/system/cpu/cpu2/online 1
     write /sys/devices/system/cpu/cpu3/online 1
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "intelliactive"
-    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor "intelliactive"
-    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor "intelliactive"
-    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor "intelliactive"
-    write /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay 20000
-    write /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load 70
-    write /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq 600000
-    write /sys/devices/system/cpu/cpufreq/interactive/io_is_busy 1
-    write /sys/devices/system/cpu/cpufreq/interactive/target_loads 90
-    write /sys/devices/system/cpu/cpufreq/interactive/min_sample_time 40000
-    write /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor 100000
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "dynamic"
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor "dynamic"
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor "dynamic"
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor "dynamic"
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 300000
     write /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq 300000
     write /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq 300000
@@ -578,11 +568,10 @@ on property:sys.boot_completed=1
     chmod 0664 /sys/devices/system/cpu/cpu2/online
     chmod 0664 /sys/devices/system/cpu/cpu3/online
 
-# Set intelli_plug parameters and lowmemorykiller parameters
 # Experimental settings by J-kun
   write /sys/module/intelli_plug/parameters/intelli_plug_active 1
-  write /sys/module/intelli_plug/parameters/touch_boost_active 0
-  write /sys/module/lowmemorykiller/parameters/minfree 2048,4096,8192,16384,24576,32768
+  write /sys/module/intelli_plug/parameters/touch_boost_active 1
+  write /sys/module/lowmemorykiller/parameters/minfree 12800,15360,17920,20480,25600,33280
   write /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
   write /sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate 1
   write /sys/block/mmcblk1/queue/scheduler fiops
@@ -591,7 +580,6 @@ on property:sys.boot_completed=1
   write /sys/kernel/power_suspend/power_suspend_mode 1
   write /sys/block/mmcblk0/queue/read_ahead_kb 512
   write /sys/block/mmcblk1/queue/read_ahead_kb 512
-  write /sys/devices/system/cpu/cpufreq/interactive/boost 1
 
 # Charger
 on property:ro.bootmode=chargerlogo
