@@ -84,10 +84,13 @@ PRODUCT_COPY_FILES += \
     device/lge/w7/prebuilt/etc/wifi/WCNSS_qcom_wlan_nv.bin:system/etc/wifi/WCNSS_qcom_wlan_nv_boot.bin \
     device/lge/w7/prebuilt/etc/wifi/WCNSS_qcom_cfg.ini:system/etc/wifi/WCNSS_qcom_cfg.ini
 
+#Alternative Camera
+PRODUCT_COPY_FILES += \
+    device/lge/w7/prebuilt/app/CN.apk:system/app/CN/CN.apk
+
 # Ramdisk
 PRODUCT_COPY_FILES += \
     device/lge/w7/rootdir/fstab.w7:root/fstab.w7 \
-    device/lge/w7/rootdir/init.w7.rc:root/init.w7.rc \
     device/lge/w7/rootdir/init.w7.rc:root/init.w7.rc \
     device/lge/w7/rootdir/init.w7.usb.rc:root/init.w7.usb.rc \
     device/lge/w7/rootdir/ueventd.w7.rc:root/ueventd.w7.rc
