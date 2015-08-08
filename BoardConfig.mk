@@ -176,4 +176,6 @@ include device/qcom/sepolicy/sepolicy.mk
 
 BOARD_SEPOLICY_DIRS += \
         device/lge/w7/sepolicy
-
+        
+#Fix reboot when the screen is locked
+BOARD_NO_WIFI_HAL := true
