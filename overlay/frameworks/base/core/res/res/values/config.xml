@@ -323,5 +323,8 @@
    <!-- Performance profiles -->
    <string name="config_perf_profile_prop">sys.perf.profile</string>
    <string name="config_perf_profile_default_entry">1</string>
+   
+   <!-- Package name providing default WebView implementation. -->
+   <string name="config_webViewPackageName" translatable="false">com.google.android.webview</string>
 
 </resources>
