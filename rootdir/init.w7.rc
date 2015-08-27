@@ -44,9 +44,6 @@ on init
     symlink /storage/emulated/legacy /mnt/sdcard
     symlink /storage/emulated/legacy /storage/sdcard0
     symlink /mnt/shell/emulated/0 /storage/emulated/legacy
-    symlink /storage/sdcard1 /extSdCard
-    symlink /storage/sdcard1 /mnt/extSdCard
-    symlink /storage/sdcard1 /external_sd
 
     # NFC fix
     symlink /dev/pn547 /dev/pn544
@@ -206,9 +203,6 @@ on fs
 
     mkdir /firmware 0771 system system
     mount vfat /dev/block/platform/msm_sdcc.1/by-name/modem /firmware ro shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
-
-on charger
-   class_start charger
 
 on post-fs-data
 
@@ -505,9 +499,9 @@ service thermal-engine /system/bin/thermal-engine
    user root
    group root
 
-service charger /sbin/charger_w7
+service charger /sbin/healthd -c
     class charger
-    critical
+    seclabel u:r:healthd:s0
 
 service adsprpcd /system/bin/adsprpcd
    class main
@@ -533,113 +527,11 @@ service config_bluetooth /system/bin/sh /system/etc/init.zetaw.bt.sh "onboot"
     user root
     oneshot
 
-on property:sys.boot_completed=1
-	    write /sys/module/lpm_levels/enable_low_power/l2 4
-	    write /sys/module/msm_pm/modes/cpu0/power_collapse/suspend_enabled 1
-	    write /sys/module/msm_pm/modes/cpu1/power_collapse/suspend_enabled 1
-	    write /sys/module/msm_pm/modes/cpu2/power_collapse/suspend_enabled 1
-	    write /sys/module/msm_pm/modes/cpu3/power_collapse/suspend_enabled 1
-	    write /sys/module/msm_pm/modes/cpu0/power_collapse/idle_enabled 1
-	    write /sys/module/msm_pm/modes/cpu1/power_collapse/idle_enabled 1
-	    write /sys/module/msm_pm/modes/cpu2/power_collapse/idle_enabled 1
-	    write /sys/module/msm_pm/modes/cpu3/power_collapse/idle_enabled 1
-	    write /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/suspend_enabled 1
-	    write /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/suspend_enabled 1
-	    write /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/suspend_enabled 1
-	    write /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/suspend_enabled 1
-	    write /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/idle_enabled 1
-	    write /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/idle_enabled 1
-	    write /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/idle_enabled 1
-	    write /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/idle_enabled 1
-	    write /sys/module/msm_pm/modes/cpu0/retention/idle_enabled 1
-	    write /sys/module/msm_pm/modes/cpu1/retention/idle_enabled 1
-	    write /sys/module/msm_pm/modes/cpu2/retention/idle_enabled 1
-	    write /sys/module/msm_pm/modes/cpu3/retention/idle_enabled 1
-	    write /sys/module/msm_show_resume_irq/parameters/debug_mask 1
-
-# Experimental settings by J-kun
-	    write /sys/kernel/power_suspend/power_suspend_mode 1
-	    write /sys/block/mmcblk1/queue/scheduler sioplus
-	    write /sys/block/mmcblk0/queue/scheduler sioplus
-	    write /sys/block/mmcblk0/queue/read_ahead_kb 512
-	    write /sys/block/mmcblk1/queue/read_ahead_kb 512
-	    write /sys/module/lowmemorykiller/parameters/minfree 12800,15360,17920,20480,25600,33280
-
-# Performance Profiles
-	# Powersave
-	on property:sys.perf.profile=0
-	    stop mpdecision
-	    write /sys/module/intelli_plug/parameters/intelli_plug_active 1
-	    write /sys/module/intelli_plug/parameters/touch_boost_active 0
-	    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 600000
-	    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq 600000
-	    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq 600000
-	    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq 600000
-	    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-	    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-	    write /sys/devices/system/cpu/cpu0/online 1
-	    write /sys/devices/system/cpu/cpu1/online 1
-	    write /sys/devices/system/cpu/cpu2/online 0
-	    write /sys/devices/system/cpu/cpu3/online 0
-	    chown root system /sys/devices/system/cpu/cpu1/online
-	    chown root system /sys/devices/system/cpu/cpu2/online
-	    chown root system /sys/devices/system/cpu/cpu3/online
-	    chmod 0664 /sys/devices/system/cpu/cpu1/online
-	    chmod 0664 /sys/devices/system/cpu/cpu2/online
-	    chmod 0664 /sys/devices/system/cpu/cpu3/online
-	    write /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/governor powersave
-	    write /sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate 0	
-
-    # Balanced
-	on property:sys.perf.profile=1
-	    stop mpdecision
-	    write /sys/module/intelli_plug/parameters/intelli_plug_active 1
-	    write /sys/module/intelli_plug/parameters/touch_boost_active 1
-	    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "dynamic"
-	    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor "dynamic"
-	    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor "dynamic"
-	    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor "dynamic"
-	    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 300000
-	    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq 300000
-	    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq 300000
-	    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq 300000
-	    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1190400
-	    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq 1190400
-	    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq 1190400
-	    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq 1190400
-	    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-	    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq		
-	    write /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz			
-	    write /sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate 1	
-
-	# Performance
-	on property:sys.perf.profile=2
-	    stop mpdecision
-	    write /sys/module/intelli_plug/parameters/intelli_plug_active 0
-	    write /sys/module/intelli_plug/parameters/touch_boost_active 1
-	    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "performance"
-	    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor "performance"
-	    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor "performance"
-	    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor "performance"
-	    write /sys/devices/system/cpu/cpu0/online 1
-	    write /sys/devices/system/cpu/cpu1/online 1
-	    write /sys/devices/system/cpu/cpu2/online 1
-	    write /sys/devices/system/cpu/cpu3/online 1
-	    chown root system /sys/devices/system/cpu/cpu0/online
-	    chown root system /sys/devices/system/cpu/cpu1/online
-	    chown root system /sys/devices/system/cpu/cpu2/online
-	    chown root system /sys/devices/system/cpu/cpu3/online
-	    chmod 0664 /sys/devices/system/cpu/cpu0/online
-	    chmod 0664 /sys/devices/system/cpu/cpu1/online
-	    chmod 0664 /sys/devices/system/cpu/cpu2/online
-	    chmod 0664 /sys/devices/system/cpu/cpu3/online
-	    write /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/governor performance			
-	    write /sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate 0		
-
 # Charger
-on property:ro.bootmode=chargerlogo
+on charger
     wait /dev/block/platform/msm_sdcc.1/by-name/system
     mount ext4 /dev/block/platform/msm_sdcc.1/by-name/system /system ro barrier=1
+    start rmt_storage
 
     write /sys/module/lpm_levels/enable_low_power/l2 1
     write /sys/module/msm_pm/modes/cpu0/power_collapse/suspend_enabled 1
@@ -673,3 +565,122 @@ on property:ro.bootmode=chargerlogo
     write /sys/devices/system/cpu/cpu1/online 1
     write /sys/devices/system/cpu/cpu2/online 1
     write /sys/devices/system/cpu/cpu3/online 1
+
+
+on property:init.svc.bootanim=running
+    # Switch to performance mode while booting
+    setprop sys.perf.profile 2
+    # Switch to NOOP while booting
+    write /sys/block/mmcblk0/queue/scheduler noop
+
+on property:sys.boot_completed=1
+	write /sys/module/lpm_levels/enable_low_power/l2 4
+	write /sys/module/msm_pm/modes/cpu0/power_collapse/suspend_enabled 1
+	write /sys/module/msm_pm/modes/cpu1/power_collapse/suspend_enabled 1
+	write /sys/module/msm_pm/modes/cpu2/power_collapse/suspend_enabled 1
+	write /sys/module/msm_pm/modes/cpu3/power_collapse/suspend_enabled 1
+	write /sys/module/msm_pm/modes/cpu0/power_collapse/idle_enabled 1
+	write /sys/module/msm_pm/modes/cpu1/power_collapse/idle_enabled 1
+	write /sys/module/msm_pm/modes/cpu2/power_collapse/idle_enabled 1
+	write /sys/module/msm_pm/modes/cpu3/power_collapse/idle_enabled 1
+	write /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/suspend_enabled 1
+	write /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/suspend_enabled 1
+	write /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/suspend_enabled 1
+	write /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/suspend_enabled 1
+	write /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/idle_enabled 1
+	write /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/idle_enabled 1
+	write /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/idle_enabled 1
+	write /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/idle_enabled 1
+	write /sys/module/msm_pm/modes/cpu0/retention/idle_enabled 1
+	write /sys/module/msm_pm/modes/cpu1/retention/idle_enabled 1
+	write /sys/module/msm_pm/modes/cpu2/retention/idle_enabled 1
+	write /sys/module/msm_pm/modes/cpu3/retention/idle_enabled 1
+	write /sys/module/msm_show_resume_irq/parameters/debug_mask 1
+
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 192000
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq 192000
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq 192000
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq 192000
+
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+    chown root system /sys/devices/system/cpu/cpu1/online
+    chown root system /sys/devices/system/cpu/cpu2/online
+    chown root system /sys/devices/system/cpu/cpu3/online
+    chmod 0664 /sys/devices/system/cpu/cpu1/online
+    chmod 0664 /sys/devices/system/cpu/cpu2/online
+    chmod 0664 /sys/devices/system/cpu/cpu3/online
+
+    write /sys/module/cpu_boost/parameters/boost_ms 20
+    write /sys/module/cpu_boost/parameters/sync_threshold 998000
+    write /sys/module/cpu_boost/parameters/input_boost_freq 1094400
+    write /sys/module/cpu_boost/parameters/input_boost_ms 40
+
+# Experimental settings by J-kun
+	    write /sys/block/mmcblk1/queue/scheduler sioplus
+	    write /sys/block/mmcblk0/queue/scheduler sioplus
+	    write /sys/block/mmcblk0/queue/read_ahead_kb 512
+	    write /sys/block/mmcblk1/queue/read_ahead_kb 256
+	    write /sys/module/lowmemorykiller/parameters/minfree 12800,15360,17920,20480,25600,33280
+
+# Performance Profiles
+	# Powersave
+	on property:sys.perf.profile=0
+    stop mpdecision
+    write /sys/module/intelli_plug/parameters/intelli_plug_active 1
+    write /sys/module/intelli_plug/parameters/touch_boost_active 0
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 600000
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq 600000
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq 600000
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq 600000
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+    write /sys/devices/system/cpu/cpu0/online 1
+    write /sys/devices/system/cpu/cpu1/online 1
+    write /sys/devices/system/cpu/cpu2/online 0
+    write /sys/devices/system/cpu/cpu3/online 0
+    chown root system /sys/devices/system/cpu/cpu1/online
+    chown root system /sys/devices/system/cpu/cpu2/online
+    chown root system /sys/devices/system/cpu/cpu3/online
+    chmod 0664 /sys/devices/system/cpu/cpu1/online
+    chmod 0664 /sys/devices/system/cpu/cpu2/online
+    chmod 0664 /sys/devices/system/cpu/cpu3/online
+    write /sys/devices/system/cpu/cpu1/online 1
+    write /sys/devices/system/cpu/cpu2/online 1
+    write /sys/devices/system/cpu/cpu3/online 1
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor powersave
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor powersave
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor powersave
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor powersave
+    write /sys/class/devfreq/fdb00000.qcom,kgsl-3d0/governor powersave
+    write /sys/class/devfreq/qcom,cpubw.63/governor powersave
+
+    # Balanced
+	on property:sys.perf.profile=1
+	stop mpdecision
+	write /sys/module/intelli_plug/parameters/intelli_plug_active 0
+	write /sys/module/intelli_plug/parameters/touch_boost_active 1
+	write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "dynamic"
+	write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor "dynamic"
+	write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor "dynamic"
+	write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor "dynamic"
+	write /sys/class/devfreq/fdb00000.qcom,kgsl-3d0/governor msm-adreno-tz
+	write /sys/class/devfreq/qcom,cpubw.63/governor msm_cpufreq
+	write /sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate 1
+
+# Performance
+	on property:sys.perf.profile=2
+	stop mpdecision
+	write /sys/module/intelli_plug/parameters/intelli_plug_active 0
+	write /sys/module/intelli_plug/parameters/touch_boost_active 1
+	write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "performance"
+	write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor "performance"
+	write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor "performance"
+	write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor "performance"
+	write /sys/devices/system/cpu/cpu0/online 1
+	write /sys/devices/system/cpu/cpu1/online 1
+	write /sys/devices/system/cpu/cpu2/online 1
+	write /sys/devices/system/cpu/cpu3/online 1
+	write /sys/class/devfreq/fdb00000.qcom,kgsl-3d0/governor performance
+	write /sys/class/devfreq/qcom,cpubw.63/governor performance
+	write /sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate 0
